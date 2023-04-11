@@ -20,7 +20,7 @@ public class VilleController {
 	@RequestMapping(value = "/getVille", method = RequestMethod.GET)
 	@ResponseBody
 	public Object get(@RequestParam(required = false, value = "codePostal") String codePostal, @RequestParam(required = false, value = "codeCommunal") String codeCommunal) {
-		System.out.println("get : " + codePostal + " get : " + codeCommunal);
+		//System.out.println("get : " + codePostal + " get : " + codeCommunal);
 
 		return villeBLOService.getInfoVilles(codePostal, codeCommunal);
 	}
@@ -28,7 +28,7 @@ public class VilleController {
 	@RequestMapping(value = "/addVille", method = RequestMethod.POST)
 	@ResponseBody
 	public Object post(@RequestBody Ville ville) {
-		System.out.println("post : " + ville.getNomCommune());
+		//System.out.println("post : " + ville.getNomCommune());
 
 		villeBLOService.addVille(ville);
 		return "La ville " + ville.getNomCommune() + " a été ajoutée";
@@ -37,7 +37,7 @@ public class VilleController {
 	@RequestMapping(value = "/editVille", method = RequestMethod.PUT)
 	@ResponseBody
 	public Object put(@RequestBody Ville ville) {
-		System.out.println("put : " + ville.getNomCommune());
+		//System.out.println("put : " + ville.getNomCommune());
 
 		villeBLOService.editVille(ville);
 		return "La ville " + ville.getNomCommune() + " a été modifiée";
@@ -46,7 +46,7 @@ public class VilleController {
 	@RequestMapping(value = "/deleteVille", method = RequestMethod.DELETE)
 	@ResponseBody
 	public Object delete(@RequestBody Ville ville) {
-		System.out.println("delete : " + ville.getNomCommune());
+		//System.out.println("delete : " + ville.getNomCommune());
 
 		villeBLOService.deleteVille(ville);
 		return "La ville " + ville.getNomCommune() + " a été supprimée";
@@ -55,7 +55,7 @@ public class VilleController {
 	@RequestMapping(value = "/flagVille", method = RequestMethod.PUT)
 	@ResponseBody
 	public Object inhib(@RequestBody Ville ville) {
-		System.out.println("inhib/désinhib : " + ville.getNomCommune());
+		//System.out.println("inhib/désinhib : " + ville.getNomCommune());
 
 		villeBLOService.inhibVille(ville);
 		return "La ville " + ville.getNomCommune() + " a été inhibée/désinhibée";

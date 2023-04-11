@@ -17,43 +17,45 @@ public class VilleDAOImpl implements VilleDAO {
 	public void inhibVille(Ville ville) {
 		JdbcConfigurator database = new JdbcConfigurator();
 		String queryCategory = "SELECT Code_Commune_INSEE FROM ville_france";
-		PreparedStatement statementCategory;
-		try {
-			statementCategory = database.getConnection().prepareStatement(queryCategory);
-			ResultSet resultCategory = statementCategory.executeQuery();
+		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
+				ResultSet resultCategory = statementCategory.executeQuery();) {
 			while (resultCategory.next()) {
 				String codeCommuneInseeDB = resultCategory.getString("Code_Commune_INSEE");
 				if (codeCommuneInseeDB.equals(ville.getCodeCommune())) {
-					String queryFlag = "SELECT flag FROM ville_france WHERE `Code_commune_INSEE`="+codeCommuneInseeDB;
-					PreparedStatement statementFlag = database.getConnection().prepareStatement(queryFlag);
-					ResultSet resultFlag = statementFlag.executeQuery();
-					resultFlag.next();
-					int flag = resultFlag.getInt("flag");
-					String queryChangeFlag = "UPDATE `ville_france` SET flag=? WHERE `Code_commune_INSEE`="+codeCommuneInseeDB;
-					PreparedStatement statementChangeFlag  = database.getConnection().prepareStatement(queryChangeFlag);
-					if (flag==1)
-						statementChangeFlag.setString(1, "0");
-					else
-						statementChangeFlag.setString(1, "1");
-					statementChangeFlag.executeUpdate();
+					String queryFlag = "SELECT flag FROM ville_france WHERE `Code_commune_INSEE`=" + codeCommuneInseeDB;
+					try (PreparedStatement statementFlag = database.getConnection().prepareStatement(queryFlag);
+							ResultSet resultFlag = statementFlag.executeQuery();) {
+						resultFlag.next();
+						int flag = resultFlag.getInt("flag");
+						String queryChangeFlag = "UPDATE `ville_france` SET flag=? WHERE `Code_commune_INSEE`="
+								+ codeCommuneInseeDB;
+						PreparedStatement statementChangeFlag = database.getConnection()
+								.prepareStatement(queryChangeFlag);
+						if (flag == 1)
+							statementChangeFlag.setString(1, "0");
+						else
+							statementChangeFlag.setString(1, "1");
+						statementChangeFlag.executeUpdate();
+					} catch (SQLException e3) {
+						e3.printStackTrace();
+					}
+
 				}
 			}
-			
+
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
 		database.closeDatabase();
 	}
-	
+
 	public void deleteVille(Ville ville) {
 		JdbcConfigurator database = new JdbcConfigurator();
 		String queryCategory = "SELECT * FROM ville_france";
-		PreparedStatement statementCategory;
 		boolean estPresente = false;
-		String codeCommune=null;
-		try {
-			statementCategory = database.getConnection().prepareStatement(queryCategory);
-			ResultSet resultCategory = statementCategory.executeQuery();
+		String codeCommune = null;
+		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
+				ResultSet resultCategory = statementCategory.executeQuery();) {
 			while (resultCategory.next()) {
 				String codeCommuneInseeDB = resultCategory.getString("Code_Commune_INSEE");
 				if (codeCommuneInseeDB.equals(ville.getCodeCommune())) {
@@ -63,24 +65,22 @@ public class VilleDAOImpl implements VilleDAO {
 			}
 			if (estPresente) {
 				queryCategory = "DELETE FROM `ville_france` WHERE `Code_commune_INSEE`=" + codeCommune;
-				statementCategory = database.getConnection().prepareStatement(queryCategory);
-				statementCategory.executeUpdate();
+				PreparedStatement statementCategory2 = database.getConnection().prepareStatement(queryCategory);
+				statementCategory2.executeUpdate();
 			}
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
 		database.closeDatabase();
 	}
-	
+
 	public void editVille(Ville ville) {
 		JdbcConfigurator database = new JdbcConfigurator();
 		String queryCategory = "SELECT Code_Commune_INSEE FROM ville_france";
-		PreparedStatement statementCategory;
 		boolean estPresente = false;
-		String codeCommune=null;
-		try {
-			statementCategory = database.getConnection().prepareStatement(queryCategory);
-			ResultSet resultCategory = statementCategory.executeQuery();
+		String codeCommune = null;
+		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
+				ResultSet resultCategory = statementCategory.executeQuery();) {
 			while (resultCategory.next()) {
 				String codeCommuneInseeDB = resultCategory.getString("Code_Commune_INSEE");
 				if (codeCommuneInseeDB.equals(ville.getCodeCommune())) {
@@ -91,62 +91,57 @@ public class VilleDAOImpl implements VilleDAO {
 			if (estPresente) {
 				boolean isFirst = true;
 				queryCategory = "UPDATE `ville_france` SET ";
-				if (ville.getNomCommune()!=null) {
-					if (isFirst)
-						isFirst = false;
-					else
-						queryCategory += ",";
+				if (ville.getNomCommune() != null) {
+					isFirst = false;
 					queryCategory += "`Nom_commune`= '" + ville.getNomCommune() + "',";
 					queryCategory += "`Libelle_acheminement`= '" + ville.getNomCommune() + "'";
 				}
-				if (ville.getCodePostal()!=null) {
+				if (ville.getCodePostal() != null) {
 					if (isFirst)
 						isFirst = false;
 					else
 						queryCategory += ",";
 					queryCategory += "`Code_postal`= '" + ville.getCodePostal() + "'";
 				}
-				if (ville.getLigne()!=null) {
+				if (ville.getLigne() != null) {
 					if (isFirst)
 						isFirst = false;
 					else
 						queryCategory += ",";
 					queryCategory += "`Ligne_5`= '" + ville.getLigne() + "'";
 				}
-				if (ville.getLatitude()!=null) {
+				if (ville.getLatitude() != null) {
 					if (isFirst)
 						isFirst = false;
 					else
 						queryCategory += ",";
 					queryCategory += "`Latitude`= '" + ville.getLatitude() + "'";
 				}
-				if (ville.getLongitude()!=null) {
+				if (ville.getLongitude() != null) {
 					if (isFirst)
 						isFirst = false;
 					else
 						queryCategory += ",";
 					queryCategory += "`Longitude`= '" + ville.getLongitude() + "'";
 				}
-				
+
 				if (!queryCategory.equals("UPDATE `ville_france` SET ")) {
-					queryCategory+=" WHERE `Code_commune_INSEE`=" + codeCommune;
-					statementCategory = database.getConnection().prepareStatement(queryCategory);
-					statementCategory.executeUpdate();
-				}			
+					queryCategory += " WHERE `Code_commune_INSEE`=" + codeCommune;
+					PreparedStatement statementCategory2 = database.getConnection().prepareStatement(queryCategory);
+					statementCategory2.executeUpdate();
+				}
 			}
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
 		database.closeDatabase();
 	}
-	
+
 	public void addVille(Ville ville) {
 		JdbcConfigurator database = new JdbcConfigurator();
 		String queryCategory = "SELECT * FROM ville_france";
-		PreparedStatement statementCategory;
-		try {
-			statementCategory = database.getConnection().prepareStatement(queryCategory);
-			ResultSet resultCategory = statementCategory.executeQuery();
+		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
+				ResultSet resultCategory = statementCategory.executeQuery();) {
 			boolean estPresente = false;
 			while (resultCategory.next()) {
 				String nomCommuneDB = resultCategory.getString("Nom_commune");
@@ -157,14 +152,14 @@ public class VilleDAOImpl implements VilleDAO {
 			}
 			if (!estPresente) {
 				queryCategory = "INSERT INTO `ville_france`(`Code_commune_INSEE`, `Nom_commune`, `Code_postal`, `Libelle_acheminement`, `Ligne_5`, `Latitude`, `Longitude`) VALUES (?,?,?,?,'',?,?)";
-				statementCategory = database.getConnection().prepareStatement(queryCategory);
-				statementCategory.setString(1, ville.getCodeCommune());
-				statementCategory.setString(2, ville.getNomCommune());
-				statementCategory.setString(3, ville.getCodePostal());
-				statementCategory.setString(4, ville.getNomCommune());
-				statementCategory.setString(5, ville.getLatitude());
-				statementCategory.setString(6, ville.getLongitude());
-				statementCategory.executeUpdate();
+				PreparedStatement statementCategory2 = database.getConnection().prepareStatement(queryCategory);
+				statementCategory2.setString(1, ville.getCodeCommune());
+				statementCategory2.setString(2, ville.getNomCommune());
+				statementCategory2.setString(3, ville.getCodePostal());
+				statementCategory2.setString(4, ville.getNomCommune());
+				statementCategory2.setString(5, ville.getLatitude());
+				statementCategory2.setString(6, ville.getLongitude());
+				statementCategory2.executeUpdate();
 			}
 		} catch (SQLException e2) {
 			e2.printStackTrace();
@@ -176,12 +171,11 @@ public class VilleDAOImpl implements VilleDAO {
 
 		ArrayList<Ville> listVille = new ArrayList<Ville>();
 		JdbcConfigurator database = new JdbcConfigurator();
-		if (codePostal!=null && codePostal.length() == 5 && StringUtils.isStrictlyNumeric(codePostal)) {
+		if (codePostal != null && codePostal.length() == 5 && StringUtils.isStrictlyNumeric(codePostal)) {
 			listVille = this.tryCodePostal(database, codePostal);
-		}else if (codeCommunal != null && codeCommunal.length() == 5 && StringUtils.isStrictlyNumeric(codeCommunal)) {
+		} else if (codeCommunal != null && codeCommunal.length() == 5 && StringUtils.isStrictlyNumeric(codeCommunal)) {
 			listVille = this.tryCodeCommunal(database, codeCommunal);
-		}
-		else {
+		} else {
 			listVille = this.tryAllVille(database);
 		}
 		database.closeDatabase();
@@ -191,11 +185,9 @@ public class VilleDAOImpl implements VilleDAO {
 	private ArrayList<Ville> tryCodePostal(JdbcConfigurator database, String codePostal) {
 		String queryCategory = "SELECT * FROM ville_france WHERE ville_france.Code_postal = " + codePostal;
 		ArrayList<Ville> listVille = new ArrayList<Ville>();
-		PreparedStatement statementCategory;
 
-		try {
-			statementCategory = database.getConnection().prepareStatement(queryCategory);
-			ResultSet resultCategory = statementCategory.executeQuery();
+		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
+				ResultSet resultCategory = statementCategory.executeQuery();) {
 			resultCategory.next();
 			String nomCommune = resultCategory.getString("Nom_commune");
 			String codeCommune = resultCategory.getString("Code_commune_INSEE");
@@ -211,15 +203,13 @@ public class VilleDAOImpl implements VilleDAO {
 		}
 		return listVille;
 	}
-	
+
 	private ArrayList<Ville> tryCodeCommunal(JdbcConfigurator database, String codeCommunal) {
 		String queryCategory = "SELECT * FROM ville_france WHERE ville_france.Code_commune_INSEE = " + codeCommunal;
 		ArrayList<Ville> listVille = new ArrayList<Ville>();
-		PreparedStatement statementCategory;
 
-		try {
-			statementCategory = database.getConnection().prepareStatement(queryCategory);
-			ResultSet resultCategory = statementCategory.executeQuery();
+		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
+				ResultSet resultCategory = statementCategory.executeQuery();) {
 			resultCategory.next();
 			String nomCommune = resultCategory.getString("Nom_commune");
 			String codePostal = resultCategory.getString("Code_postal");
@@ -239,10 +229,8 @@ public class VilleDAOImpl implements VilleDAO {
 	private ArrayList<Ville> tryAllVille(JdbcConfigurator database) {
 		String queryCategory = "SELECT * FROM ville_france";
 		ArrayList<Ville> listVille = new ArrayList<Ville>();
-		PreparedStatement statementCategory;
-		try {
-			statementCategory = database.getConnection().prepareStatement(queryCategory);
-			ResultSet resultCategory = statementCategory.executeQuery();
+		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
+				ResultSet resultCategory = statementCategory.executeQuery();) {
 			while (resultCategory.next()) {
 				String nomCommune = resultCategory.getString("Nom_commune");
 				String codeCommune = resultCategory.getString("Code_commune_INSEE");
