@@ -21,10 +21,13 @@ public class VilleDAOImpl implements VilleDAO {
     private static final String LATITUDE_PARAM = "Latitude";
     private static final String LONGITUDE_PARAM = "Longitude";
     private static final String FLAG_PARAM = "Flag";
+    
+    private static final String SELECT_ALL = "SELECT * FROM ville_france";
+    private static final String SELECT_CODE_COMMUNE = "SELECT Code_Commune_INSEE FROM ville_france";
 
 	public void inhibVille(Ville ville) {
 		JdbcConfigurator database = new JdbcConfigurator();
-		String queryCategory = "SELECT Code_Commune_INSEE FROM ville_france";
+		String queryCategory = SELECT_CODE_COMMUNE;
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
 			while (resultCategory.next()) {
@@ -59,7 +62,7 @@ public class VilleDAOImpl implements VilleDAO {
 
 	public void deleteVille(Ville ville) {
 		JdbcConfigurator database = new JdbcConfigurator();
-		String queryCategory = "SELECT * FROM ville_france";
+		String queryCategory = SELECT_ALL;
 		boolean estPresente = false;
 		String codeCommune = null;
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
@@ -84,7 +87,7 @@ public class VilleDAOImpl implements VilleDAO {
 
 	public void editVille(Ville ville) {
 		JdbcConfigurator database = new JdbcConfigurator();
-		String queryCategory = "SELECT Code_Commune_INSEE FROM ville_france";
+		String queryCategory = SELECT_CODE_COMMUNE;
 		boolean estPresente = false;
 		String codeCommune = null;
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
@@ -147,7 +150,7 @@ public class VilleDAOImpl implements VilleDAO {
 
 	public void addVille(Ville ville) {
 		JdbcConfigurator database = new JdbcConfigurator();
-		String queryCategory = "SELECT * FROM ville_france";
+		String queryCategory = SELECT_ALL;
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
 			boolean estPresente = false;
@@ -235,7 +238,7 @@ public class VilleDAOImpl implements VilleDAO {
 	}
 
 	private ArrayList<Ville> tryAllVille(JdbcConfigurator database) {
-		String queryCategory = "SELECT * FROM ville_france";
+		String queryCategory = SELECT_ALL;
 		ArrayList<Ville> listVille = new ArrayList<Ville>();
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
