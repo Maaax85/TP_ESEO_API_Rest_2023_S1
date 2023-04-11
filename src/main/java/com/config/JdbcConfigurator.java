@@ -15,7 +15,7 @@ public class JdbcConfigurator {
 		try {
 			this.con = DriverManager.getConnection(this.url, this.name, this.password);
 		} catch (SQLException e) {
-			System.err.println(e.getMessage());
+			e.printStackTrace();
 		}
 	}
 

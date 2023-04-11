@@ -26,6 +26,8 @@ public class VilleDAOImpl implements VilleDAO {
 	private static final String SELECT_ALL = "SELECT * FROM ville_france";
 	private static final String SELECT_CODE_COMMUNE = "SELECT Code_Commune_INSEE FROM ville_france";
 
+	private boolean isFirst = false;
+	
 	public void inhibVille(Ville ville) {
 		JdbcConfigurator database = new JdbcConfigurator();
 		String queryFlag = "SELECT flag FROM ville_france WHERE `Code_commune_INSEE`=" + ville.getCodeCommune();
@@ -87,41 +89,14 @@ public class VilleDAOImpl implements VilleDAO {
 				}
 			}
 			if (estPresente) {
-				boolean isFirst = true;
+				this.isFirst = true;
 				queryCategory = "UPDATE `ville_france` SET ";
-				if (ville.getNomCommune() != null) {
-					isFirst = false;
-					queryCategory += "`Nom_commune`= '" + ville.getNomCommune() + "',";
-					queryCategory += "`Libelle_acheminement`= '" + ville.getNomCommune() + "'";
-				}
-				if (ville.getCodePostal() != null) {
-					if (isFirst)
-						isFirst = false;
-					else
-						queryCategory += ",";
-					queryCategory += "`Code_postal`= '" + ville.getCodePostal() + "'";
-				}
-				if (ville.getLigne() != null) {
-					if (isFirst)
-						isFirst = false;
-					else
-						queryCategory += ",";
-					queryCategory += "`Ligne_5`= '" + ville.getLigne() + "'";
-				}
-				if (ville.getLatitude() != null) {
-					if (isFirst)
-						isFirst = false;
-					else
-						queryCategory += ",";
-					queryCategory += "`Latitude`= '" + ville.getLatitude() + "'";
-				}
-				if (ville.getLongitude() != null) {
-					if (isFirst)
-						isFirst = false;
-					else
-						queryCategory += ",";
-					queryCategory += "`Longitude`= '" + ville.getLongitude() + "'";
-				}
+				queryCategory = this.addQuery("`Nom_commune`= '" + ville.getNomCommune() + "'", queryCategory, ville.getNomCommune());
+				queryCategory = this.addQuery("`Libelle_acheminement`= '" + ville.getNomCommune() + "'", queryCategory, ville.getNomCommune());
+				queryCategory = this.addQuery("`Code_postal`= '" + ville.getCodePostal() + "'", queryCategory, ville.getCodePostal());
+				queryCategory = this.addQuery("`Ligne_5`= '" + ville.getLigne() + "'", queryCategory, ville.getLigne());
+				queryCategory = this.addQuery("`Latitude`= '" + ville.getLatitude() + "'", queryCategory, ville.getLatitude());
+				queryCategory = this.addQuery("`Longitude`= '" + ville.getLongitude() + "'", queryCategory, ville.getLongitude());
 
 				if (!queryCategory.equals("UPDATE `ville_france` SET ")) {
 					queryCategory += " WHERE `Code_commune_INSEE`=" + codeCommune;
@@ -133,6 +108,19 @@ public class VilleDAOImpl implements VilleDAO {
 			e2.printStackTrace();
 		}
 		database.closeDatabase();
+	}
+	
+	private String addQuery(String setter, String query, String value) {
+		
+		if (value != null) {
+			if (this.isFirst)
+				this.isFirst = false;
+			else
+				query += ",";
+			query += setter;
+		}
+		
+		return query;
 	}
 
 	public void addVille(Ville ville) {
