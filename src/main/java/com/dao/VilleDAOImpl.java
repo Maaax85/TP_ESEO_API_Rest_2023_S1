@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.stereotype.Repository;
 
@@ -13,49 +14,35 @@ import com.mysql.cj.util.StringUtils;
 
 @Repository
 public class VilleDAOImpl implements VilleDAO {
-	
+
 	private static final String NOM_COMMUNE_PARAM = "Nom_commune";
-    private static final String CODE_POSTAL_PARAM = "Code_postal";
-    private static final String CODE_COMMUNE_PARAM = "Code_Commune_INSEE";
-    private static final String LIGNE_5_PARAM = "Ligne_5";
-    private static final String LATITUDE_PARAM = "Latitude";
-    private static final String LONGITUDE_PARAM = "Longitude";
-    private static final String FLAG_PARAM = "Flag";
-    
-    private static final String SELECT_ALL = "SELECT * FROM ville_france";
-    private static final String SELECT_CODE_COMMUNE = "SELECT Code_Commune_INSEE FROM ville_france";
+	private static final String CODE_POSTAL_PARAM = "Code_postal";
+	private static final String CODE_COMMUNE_PARAM = "Code_Commune_INSEE";
+	private static final String LIGNE_5_PARAM = "Ligne_5";
+	private static final String LATITUDE_PARAM = "Latitude";
+	private static final String LONGITUDE_PARAM = "Longitude";
+	private static final String FLAG_PARAM = "Flag";
+
+	private static final String SELECT_ALL = "SELECT * FROM ville_france";
+	private static final String SELECT_CODE_COMMUNE = "SELECT Code_Commune_INSEE FROM ville_france";
 
 	public void inhibVille(Ville ville) {
 		JdbcConfigurator database = new JdbcConfigurator();
-		String queryCategory = SELECT_CODE_COMMUNE;
-		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
-				ResultSet resultCategory = statementCategory.executeQuery();) {
-			while (resultCategory.next()) {
-				String codeCommuneInseeDB = resultCategory.getString(CODE_COMMUNE_PARAM);
-				if (codeCommuneInseeDB.equals(ville.getCodeCommune())) {
-					String queryFlag = "SELECT flag FROM ville_france WHERE `Code_commune_INSEE`=" + codeCommuneInseeDB;
-					try (PreparedStatement statementFlag = database.getConnection().prepareStatement(queryFlag);
-							ResultSet resultFlag = statementFlag.executeQuery();) {
-						resultFlag.next();
-						int flag = resultFlag.getInt("flag");
-						String queryChangeFlag = "UPDATE `ville_france` SET flag=? WHERE `Code_commune_INSEE`="
-								+ codeCommuneInseeDB;
-						PreparedStatement statementChangeFlag = database.getConnection()
-								.prepareStatement(queryChangeFlag);
-						if (flag == 1)
-							statementChangeFlag.setString(1, "0");
-						else
-							statementChangeFlag.setString(1, "1");
-						statementChangeFlag.executeUpdate();
-					} catch (SQLException e3) {
-						e3.printStackTrace();
-					}
-
-				}
-			}
-
-		} catch (SQLException e2) {
-			e2.printStackTrace();
+		String queryFlag = "SELECT flag FROM ville_france WHERE `Code_commune_INSEE`=" + ville.getCodeCommune();
+		try (PreparedStatement statementFlag = database.getConnection().prepareStatement(queryFlag);
+				ResultSet resultFlag = statementFlag.executeQuery();) {
+			resultFlag.next();
+			int flag = resultFlag.getInt("flag");
+			String queryChangeFlag = "UPDATE `ville_france` SET flag=? WHERE `Code_commune_INSEE`="
+					+ ville.getCodeCommune();
+			PreparedStatement statementChangeFlag = database.getConnection().prepareStatement(queryChangeFlag);
+			if (flag == 1)
+				statementChangeFlag.setString(1, "0");
+			else
+				statementChangeFlag.setString(1, "1");
+			statementChangeFlag.executeUpdate();
+		} catch (SQLException e3) {
+			e3.printStackTrace();
 		}
 		database.closeDatabase();
 	}
@@ -178,9 +165,9 @@ public class VilleDAOImpl implements VilleDAO {
 		database.closeDatabase();
 	}
 
-	public ArrayList<Ville> getInfoVilles(String codePostal, String codeCommunal) {
+	public List<Ville> getInfoVilles(String codePostal, String codeCommunal) {
 
-		ArrayList<Ville> listVille = new ArrayList<Ville>();
+		List<Ville> listVille = new ArrayList<Ville>();
 		JdbcConfigurator database = new JdbcConfigurator();
 		if (codePostal != null && codePostal.length() == 5 && StringUtils.isStrictlyNumeric(codePostal)) {
 			listVille = this.tryCodePostal(database, codePostal);
@@ -193,9 +180,9 @@ public class VilleDAOImpl implements VilleDAO {
 		return listVille;
 	}
 
-	private ArrayList<Ville> tryCodePostal(JdbcConfigurator database, String codePostal) {
+	private List<Ville> tryCodePostal(JdbcConfigurator database, String codePostal) {
 		String queryCategory = "SELECT * FROM ville_france WHERE ville_france.Code_postal = " + codePostal;
-		ArrayList<Ville> listVille = new ArrayList<Ville>();
+		List<Ville> listVille = new ArrayList<Ville>();
 
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
@@ -215,9 +202,9 @@ public class VilleDAOImpl implements VilleDAO {
 		return listVille;
 	}
 
-	private ArrayList<Ville> tryCodeCommunal(JdbcConfigurator database, String codeCommunal) {
+	private List<Ville> tryCodeCommunal(JdbcConfigurator database, String codeCommunal) {
 		String queryCategory = "SELECT * FROM ville_france WHERE ville_france.Code_commune_INSEE = " + codeCommunal;
-		ArrayList<Ville> listVille = new ArrayList<Ville>();
+		List<Ville> listVille = new ArrayList<Ville>();
 
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
@@ -237,9 +224,9 @@ public class VilleDAOImpl implements VilleDAO {
 		return listVille;
 	}
 
-	private ArrayList<Ville> tryAllVille(JdbcConfigurator database) {
+	private List<Ville> tryAllVille(JdbcConfigurator database) {
 		String queryCategory = SELECT_ALL;
-		ArrayList<Ville> listVille = new ArrayList<Ville>();
+		List<Ville> listVille = new ArrayList<Ville>();
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
 			while (resultCategory.next()) {

@@ -14,7 +14,6 @@ public class JdbcConfigurator {
 	public JdbcConfigurator() {
 		try {
 			this.con = DriverManager.getConnection(this.url, this.name, this.password);
-			System.out.println("Connexion réussie !");
 		} catch (SQLException e) {
 			System.err.println(e.getMessage());
 		}
@@ -23,7 +22,6 @@ public class JdbcConfigurator {
 	public void closeDatabase() {
 		try {
 			this.con.close();
-			System.out.println("Fermeture de la connexion");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

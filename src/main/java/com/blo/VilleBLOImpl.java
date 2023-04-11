@@ -1,6 +1,6 @@
 package com.blo;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,7 +14,7 @@ public class VilleBLOImpl implements VilleBLO {
 	@Autowired
 	private VilleDAO villeDAO;
 
-	public ArrayList<Ville> getInfoVilles(String codePostal, String codeCommunal) {
+	public List<Ville> getInfoVilles(String codePostal, String codeCommunal) {
 		return villeDAO.getInfoVilles(codePostal, codeCommunal);
 	}
 
