@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import com.config.JdbcConfigurator;
@@ -26,6 +28,9 @@ public class VilleDAOImpl implements VilleDAO {
 	private static final String SELECT_ALL = "SELECT * FROM ville_france";
 	private static final String SELECT_CODE_COMMUNE = "SELECT Code_Commune_INSEE FROM ville_france";
 
+	private static final String ERROR_SQL_STRING = "An SQL exception occurred";
+	private static final Logger LOGGER = LoggerFactory.getLogger(VilleDAOImpl.class);
+	
 	private boolean isFirst = false;
 	
 	public void inhibVille(Ville ville) {
@@ -44,7 +49,7 @@ public class VilleDAOImpl implements VilleDAO {
 				statementChangeFlag.setString(1, "1");
 			statementChangeFlag.executeUpdate();
 		} catch (SQLException e3) {
-			e3.printStackTrace();
+			LOGGER.error(ERROR_SQL_STRING, e3);
 		}
 		database.closeDatabase();
 	}
@@ -69,7 +74,7 @@ public class VilleDAOImpl implements VilleDAO {
 				statementCategory2.executeUpdate();
 			}
 		} catch (SQLException e2) {
-			e2.printStackTrace();
+			LOGGER.error(ERROR_SQL_STRING, e2);
 		}
 		database.closeDatabase();
 	}
@@ -105,7 +110,7 @@ public class VilleDAOImpl implements VilleDAO {
 				}
 			}
 		} catch (SQLException e2) {
-			e2.printStackTrace();
+			LOGGER.error(ERROR_SQL_STRING, e2);
 		}
 		database.closeDatabase();
 	}
@@ -148,7 +153,7 @@ public class VilleDAOImpl implements VilleDAO {
 				statementCategory2.executeUpdate();
 			}
 		} catch (SQLException e2) {
-			e2.printStackTrace();
+			LOGGER.error(ERROR_SQL_STRING, e2);
 		}
 		database.closeDatabase();
 	}
@@ -230,7 +235,7 @@ public class VilleDAOImpl implements VilleDAO {
 				listVille.add(ville);
 			}
 		} catch (SQLException e2) {
-			e2.printStackTrace();
+			LOGGER.error(ERROR_SQL_STRING, e2);
 		}
 		return listVille;
 	}
