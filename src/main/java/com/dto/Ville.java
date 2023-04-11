@@ -6,14 +6,18 @@ public class Ville {
 	private String codeCommune;
 	private String codePostal;
 	private String ligne;
-	private Coordonnee coordonnee;
+	private String latitude;
+	private String longitude;
+	private String flag;
 
-	public Ville(String nomCommune, String codeCommune, String codePostal, String ligne, Coordonnee coordonnee) {
+	public Ville(String nomCommune, String codeCommune, String codePostal, String ligne, String latitude, String longitude, String flag) {
 		this.nomCommune = nomCommune;
 		this.codeCommune = codeCommune;
 		this.codePostal = codePostal;
 		this.ligne = ligne;
-		this.coordonnee = coordonnee;
+		this.latitude = latitude;
+		this.longitude = longitude;
+		this.flag = flag;
 	}
 	
 	public Ville() {
@@ -26,14 +30,6 @@ public class Ville {
 
 	public void setCodeCommune(String codeCommune) {
 		this.codeCommune = codeCommune;
-	}
-
-	public Coordonnee getCordonnee() {
-		return coordonnee;
-	}
-
-	public void setCordonnee(Coordonnee coordonnee) {
-		this.coordonnee = coordonnee;
 	}
 
 	public String getCodePostal() {
@@ -60,4 +56,28 @@ public class Ville {
 		this.nomCommune = nomCommune;
 	}
 
+	public String getLatitude() {
+		return latitude;
+	}
+
+	public void setLatitude(String latitude) {
+		this.latitude = latitude;
+	}
+
+	public String getLongitude() {
+		return longitude;
+	}
+
+	public void setLongitude(String longitude) {
+		this.longitude = longitude;
+	}
+	
+	public String getFlag() {
+		return flag;
+	}
+
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+	
 }

@@ -6,6 +6,13 @@ import com.dto.Ville;
 
 public interface VilleBLO {
 
-	public ArrayList<Ville> getInfoVilles(String codePostal);
+	public ArrayList<Ville> getInfoVilles(String codePostal, String codeCommunal);
+
+	public void addVille(Ville ville);
 	
+	public void editVille(Ville ville);
+	
+	public void deleteVille(Ville ville);
+	
+	public void inhibVille(Ville ville);
 }
