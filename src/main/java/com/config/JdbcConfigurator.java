@@ -29,7 +29,7 @@ public class JdbcConfigurator {
 		try {
 			this.con.close();
 		} catch (SQLException e) {
-			e.printStackTrace();
+			LOGGER.error(ERROR_SQL_STRING, e);
 		}
 	}
 
