@@ -13,6 +13,14 @@ import com.mysql.cj.util.StringUtils;
 
 @Repository
 public class VilleDAOImpl implements VilleDAO {
+	
+	private static final String NOM_COMMUNE_PARAM = "Nom_commune";
+    private static final String CODE_POSTAL_PARAM = "Code_postal";
+    private static final String CODE_COMMUNE_PARAM = "Code_Commune_INSEE";
+    private static final String LIGNE_5_PARAM = "Ligne_5";
+    private static final String LATITUDE_PARAM = "Latitude";
+    private static final String LONGITUDE_PARAM = "Longitude";
+    private static final String FLAG_PARAM = "Flag";
 
 	public void inhibVille(Ville ville) {
 		JdbcConfigurator database = new JdbcConfigurator();
@@ -20,7 +28,7 @@ public class VilleDAOImpl implements VilleDAO {
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
 			while (resultCategory.next()) {
-				String codeCommuneInseeDB = resultCategory.getString("Code_Commune_INSEE");
+				String codeCommuneInseeDB = resultCategory.getString(CODE_COMMUNE_PARAM);
 				if (codeCommuneInseeDB.equals(ville.getCodeCommune())) {
 					String queryFlag = "SELECT flag FROM ville_france WHERE `Code_commune_INSEE`=" + codeCommuneInseeDB;
 					try (PreparedStatement statementFlag = database.getConnection().prepareStatement(queryFlag);
@@ -57,7 +65,7 @@ public class VilleDAOImpl implements VilleDAO {
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
 			while (resultCategory.next()) {
-				String codeCommuneInseeDB = resultCategory.getString("Code_Commune_INSEE");
+				String codeCommuneInseeDB = resultCategory.getString(CODE_COMMUNE_PARAM);
 				if (codeCommuneInseeDB.equals(ville.getCodeCommune())) {
 					estPresente = true;
 					codeCommune = codeCommuneInseeDB;
@@ -82,7 +90,7 @@ public class VilleDAOImpl implements VilleDAO {
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
 			while (resultCategory.next()) {
-				String codeCommuneInseeDB = resultCategory.getString("Code_Commune_INSEE");
+				String codeCommuneInseeDB = resultCategory.getString(CODE_COMMUNE_PARAM);
 				if (codeCommuneInseeDB.equals(ville.getCodeCommune())) {
 					estPresente = true;
 					codeCommune = codeCommuneInseeDB;
@@ -144,7 +152,7 @@ public class VilleDAOImpl implements VilleDAO {
 				ResultSet resultCategory = statementCategory.executeQuery();) {
 			boolean estPresente = false;
 			while (resultCategory.next()) {
-				String nomCommuneDB = resultCategory.getString("Nom_commune");
+				String nomCommuneDB = resultCategory.getString(NOM_COMMUNE_PARAM);
 				int codePostalDB = resultCategory.getInt("Code_postal");
 				if (nomCommuneDB.equals(ville.getNomCommune()) && ("" + codePostalDB).equals(ville.getCodePostal())) {
 					estPresente = true;
@@ -189,12 +197,12 @@ public class VilleDAOImpl implements VilleDAO {
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
 			resultCategory.next();
-			String nomCommune = resultCategory.getString("Nom_commune");
-			String codeCommune = resultCategory.getString("Code_commune_INSEE");
-			String longitude = resultCategory.getString("Longitude");
-			String latitude = resultCategory.getString("Latitude");
-			String ligne = resultCategory.getString("Ligne_5");
-			String flag = resultCategory.getString("Flag");
+			String nomCommune = resultCategory.getString(NOM_COMMUNE_PARAM);
+			String codeCommune = resultCategory.getString(CODE_COMMUNE_PARAM);
+			String longitude = resultCategory.getString(LONGITUDE_PARAM);
+			String latitude = resultCategory.getString(LATITUDE_PARAM);
+			String ligne = resultCategory.getString(LIGNE_5_PARAM);
+			String flag = resultCategory.getString(FLAG_PARAM);
 
 			Ville ville = new Ville(nomCommune, codeCommune, codePostal, ligne, latitude, longitude, flag);
 			listVille.add(ville);
@@ -211,12 +219,12 @@ public class VilleDAOImpl implements VilleDAO {
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
 			resultCategory.next();
-			String nomCommune = resultCategory.getString("Nom_commune");
-			String codePostal = resultCategory.getString("Code_postal");
-			String longitude = resultCategory.getString("Longitude");
-			String latitude = resultCategory.getString("Latitude");
-			String ligne = resultCategory.getString("Ligne_5");
-			String flag = resultCategory.getString("Flag");
+			String nomCommune = resultCategory.getString(NOM_COMMUNE_PARAM);
+			String codePostal = resultCategory.getString(CODE_COMMUNE_PARAM);
+			String longitude = resultCategory.getString(LONGITUDE_PARAM);
+			String latitude = resultCategory.getString(LATITUDE_PARAM);
+			String ligne = resultCategory.getString(LIGNE_5_PARAM);
+			String flag = resultCategory.getString(FLAG_PARAM);
 
 			Ville ville = new Ville(nomCommune, codeCommunal, codePostal, ligne, latitude, longitude, flag);
 			listVille.add(ville);
@@ -232,13 +240,13 @@ public class VilleDAOImpl implements VilleDAO {
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
 			while (resultCategory.next()) {
-				String nomCommune = resultCategory.getString("Nom_commune");
-				String codeCommune = resultCategory.getString("Code_commune_INSEE");
-				String codePostal = resultCategory.getString("Code_postal");
-				String longitude = resultCategory.getString("Longitude");
-				String latitude = resultCategory.getString("Latitude");
-				String ligne = resultCategory.getString("Ligne_5");
-				String flag = resultCategory.getString("Flag");
+				String nomCommune = resultCategory.getString(NOM_COMMUNE_PARAM);
+				String codeCommune = resultCategory.getString(CODE_COMMUNE_PARAM);
+				String codePostal = resultCategory.getString(CODE_POSTAL_PARAM);
+				String longitude = resultCategory.getString(LONGITUDE_PARAM);
+				String latitude = resultCategory.getString(LATITUDE_PARAM);
+				String ligne = resultCategory.getString(LIGNE_5_PARAM);
+				String flag = resultCategory.getString(FLAG_PARAM);
 
 				Ville ville = new Ville(nomCommune, codeCommune, codePostal, ligne, latitude, longitude, flag);
 				listVille.add(ville);

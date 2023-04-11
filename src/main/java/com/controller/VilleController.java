@@ -16,6 +16,8 @@ public class VilleController {
 
 	@Autowired
 	VilleBLO villeBLOService;
+	
+	private static final String VILLE_TEXT = "La ville ";
 
 	@RequestMapping(value = "/getVille", method = RequestMethod.GET)
 	@ResponseBody
@@ -31,7 +33,7 @@ public class VilleController {
 		//System.out.println("post : " + ville.getNomCommune());
 
 		villeBLOService.addVille(ville);
-		return "La ville " + ville.getNomCommune() + " a été ajoutée";
+		return VilleController.VILLE_TEXT + ville.getNomCommune() + " a été ajoutée";
 	}
 
 	@RequestMapping(value = "/editVille", method = RequestMethod.PUT)
@@ -40,7 +42,7 @@ public class VilleController {
 		//System.out.println("put : " + ville.getNomCommune());
 
 		villeBLOService.editVille(ville);
-		return "La ville " + ville.getNomCommune() + " a été modifiée";
+		return VilleController.VILLE_TEXT + ville.getNomCommune() + " a été modifiée";
 	}
 
 	@RequestMapping(value = "/deleteVille", method = RequestMethod.DELETE)
@@ -49,7 +51,7 @@ public class VilleController {
 		//System.out.println("delete : " + ville.getNomCommune());
 
 		villeBLOService.deleteVille(ville);
-		return "La ville " + ville.getNomCommune() + " a été supprimée";
+		return VilleController.VILLE_TEXT + ville.getNomCommune() + " a été supprimée";
 	}
 	
 	@RequestMapping(value = "/flagVille", method = RequestMethod.PUT)
@@ -58,7 +60,7 @@ public class VilleController {
 		//System.out.println("inhib/désinhib : " + ville.getNomCommune());
 
 		villeBLOService.inhibVille(ville);
-		return "La ville " + ville.getNomCommune() + " a été inhibée/désinhibée";
+		return VilleController.VILLE_TEXT + ville.getNomCommune() + " a été inhibée/désinhibée";
 	}
 
 }
