@@ -143,7 +143,7 @@ public class VilleDAOImpl implements VilleDAO {
 			boolean estPresente = false;
 			while (resultCategory.next()) {
 				String nomCommuneDB = resultCategory.getString(NOM_COMMUNE_PARAM);
-				int codePostalDB = resultCategory.getInt("Code_postal");
+				int codePostalDB = resultCategory.getInt(CODE_POSTAL_PARAM);
 				if (nomCommuneDB.equals(ville.getNomCommune()) && ("" + codePostalDB).equals(ville.getCodePostal())) {
 					estPresente = true;
 				}
@@ -167,7 +167,7 @@ public class VilleDAOImpl implements VilleDAO {
 
 	public List<Ville> getInfoVilles(String codePostal, String codeCommunal) {
 
-		List<Ville> listVille = new ArrayList<Ville>();
+		List<Ville> listVille;
 		JdbcConfigurator database = new JdbcConfigurator();
 		if (codePostal != null && codePostal.length() == 5 && StringUtils.isStrictlyNumeric(codePostal)) {
 			listVille = this.tryCodePostal(database, codePostal);
@@ -182,7 +182,7 @@ public class VilleDAOImpl implements VilleDAO {
 
 	private List<Ville> tryCodePostal(JdbcConfigurator database, String codePostal) {
 		String queryCategory = "SELECT * FROM ville_france WHERE ville_france.Code_postal = " + codePostal;
-		List<Ville> listVille = new ArrayList<Ville>();
+		List<Ville> listVille = new ArrayList<>();
 
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
@@ -204,7 +204,7 @@ public class VilleDAOImpl implements VilleDAO {
 
 	private List<Ville> tryCodeCommunal(JdbcConfigurator database, String codeCommunal) {
 		String queryCategory = "SELECT * FROM ville_france WHERE ville_france.Code_commune_INSEE = " + codeCommunal;
-		List<Ville> listVille = new ArrayList<Ville>();
+		List<Ville> listVille = new ArrayList<>();
 
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
@@ -226,7 +226,7 @@ public class VilleDAOImpl implements VilleDAO {
 
 	private List<Ville> tryAllVille(JdbcConfigurator database) {
 		String queryCategory = SELECT_ALL;
-		List<Ville> listVille = new ArrayList<Ville>();
+		List<Ville> listVille = new ArrayList<>();
 		try (PreparedStatement statementCategory = database.getConnection().prepareStatement(queryCategory);
 				ResultSet resultCategory = statementCategory.executeQuery();) {
 			while (resultCategory.next()) {
