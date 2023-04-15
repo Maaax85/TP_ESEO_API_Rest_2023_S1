@@ -159,7 +159,6 @@ public class VilleDAOImpl implements VilleDAO {
 	}
 
 	public List<Ville> getInfoVilles(String codePostal, String codeCommunal) {
-
 		List<Ville> listVille;
 		JdbcConfigurator database = new JdbcConfigurator();
 		if (codePostal != null && codePostal.length() == 5 && StringUtils.isStrictlyNumeric(codePostal)) {
@@ -203,12 +202,12 @@ public class VilleDAOImpl implements VilleDAO {
 				ResultSet resultCategory = statementCategory.executeQuery();) {
 			resultCategory.next();
 			String nomCommune = resultCategory.getString(NOM_COMMUNE_PARAM);
-			String codePostal = resultCategory.getString(CODE_COMMUNE_PARAM);
+			String codePostal = resultCategory.getString(CODE_POSTAL_PARAM);
 			String longitude = resultCategory.getString(LONGITUDE_PARAM);
 			String latitude = resultCategory.getString(LATITUDE_PARAM);
 			String ligne = resultCategory.getString(LIGNE_5_PARAM);
 			String flag = resultCategory.getString(FLAG_PARAM);
-
+			
 			Ville ville = new Ville(nomCommune, codeCommunal, codePostal, ligne, latitude, longitude, flag);
 			listVille.add(ville);
 		} catch (SQLException e) {
